@@ -20,7 +20,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Vascowhite\\Todo":"src/"
+            "Vascowhite\\Todo\\":"src/"
         }
     },
     "minimum-stability": "dev",
