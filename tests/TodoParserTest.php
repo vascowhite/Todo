@@ -37,6 +37,7 @@ use Vascowhite\Todo\TodoParser;
 class TodoParserTest extends \PHPUnit_Framework_TestCase
 {
     private $testTodoText = '(A) 2015-04-26 This is a test todo +project @context Due:2015-04-26';
+    private $testMultiples = 'tests to do +project1 +project2 +project3 @context1 @context2 @context3';
 
     public function testCanParse()
     {
@@ -83,16 +84,16 @@ class TodoParserTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($testTodo->getPriority(), "Parsed invalid priority");
     }
 
-    public function testCanParseProject()
+    public function testCanParseProjects()
     {
         $testTodo = TodoParser::parse($this->testTodoText);
-        $this->assertEquals('project', $testTodo->getProject(), 'Could not parse project');
+        $this->assertEquals('project', $testTodo->getProjects()[0], 'Could not parse projects');
     }
 
-    public function testCanParseContext()
+    public function testCanParseContexts()
     {
         $testTodo = TodoParser::parse($this->testTodoText);
-        $this->assertEquals('context', $testTodo->getContext(), 'Could not parse context');
+        $this->assertEquals('context', $testTodo->getContexts()[0], 'Could not parse contexts');
     }
 
     public function testCanParseDueDate()
@@ -115,8 +116,14 @@ class TodoParserTest extends \PHPUnit_Framework_TestCase
 
     public function testCanParseCompletedDate()
     {
-        $testTodoText = 'x 2015-04-26 This is a test todo +project @context Due:2015-04-26';
+        $testTodoText = 'x 2015-04-26 This is a test todo +projects @contexts Due:2015-04-26';
         $testTodo = TodoParser::parse($testTodoText);
         $this->assertEquals('2015-04-26', $testTodo->getCompletedDate()->format(Todo::TODO_DATE_FORMAT));
+    }
+
+    public function testCanParseMultiples()
+    {
+        $testTodo = TodoParser::parse($this->testMultiples);
+        $this->assertEquals($this->testMultiples, $testTodo->__toString(), 'Could not parse multiple projects/contexts');
     }
 }

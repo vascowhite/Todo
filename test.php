@@ -1,15 +1,12 @@
 <?php
 
-$todo = "Example to do";
-$completed = "x 2015-04-26 2015-01-04 Example to do +project @context Due:2015-05-20";
+$todo = "Friends and relatives +moving +changeaddress @1stContext @2ndContext";
+$completed = "x 2015-04-26 2015-01-04 Example to do +projects @contexts Due:2015-05-20";
 $matches = [];
-$pattern = '/\A\((?P<priority>[A-Z])\) /m';
+$pattern = '/\+(?P<projects>\w*)/m';
 
-preg_match($pattern, $todo, $matches);
-
-dumpIt($matches);
-
-echo substr($completed, 0, 1) . "\n";
+$projects = ['project1', 'project2'];
+dumpIt(implode(' +', $projects));
 
 
 function dumpIt($it)

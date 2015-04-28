@@ -58,23 +58,23 @@ class Todo
     private $priority;
 
     /**
-     * The project that the todo is associated with.
-     * Represented in the todo.txt file by a '+' followed by the project name.
+     * The projects that the todo is associated with.
+     * Represented in the todo.txt file by a '+' followed by the projects name.
      * eg '+coolproject'
      *
-     * @var String $project
+     * @var string[] $projects
      */
-    private $project;
+    private $projects = [];
 
     /**
-     * The context for the todo.
+     * The contexts for the todo.
      * This could be a place or a method of communication
      * eg @home @ phone etc
      * Represented in the todo.txt file by '@'
      *
-     * @var Strimg $context
+     * @var string[] $contexts
      */
-    private $context;
+    private $contexts = [];
 
     /**
      * The due date of the todo.
@@ -107,17 +107,17 @@ class Todo
      * @param String        $text
      * @param \DateTime     $created
      * @param String|null   $priority
-     * @param String|null   $project
-     * @param String|null   $context
+     * @param String[]      $projects
+     * @param String[]      $contexts
      * @param \DateTime     $due
      */
-    public function __construct($text, $created = null, $priority = null, $project = null, $context = null, \DateTime $due = null, $completed = false)
+    public function __construct($text, $created = null, $priority = null, array $projects = [], array $contexts = [], \DateTime $due = null, $completed = false)
     {
         $this->text = $text;
         $this->created = $created;
         $this->priority = $priority;
-        $this->project = $project;
-        $this->context = $context;
+        $this->projects = $projects;
+        $this->contexts = $contexts;
         $this->due = $due;
         $this->completed = $completed;
 
@@ -141,16 +141,68 @@ class Todo
     public function __toString()
     {
         if($this->completed){
-            $todoString = "x {$this->completedDate->format(Todo::TODO_DATE_FORMAT)}";
-            $todoString .= " {$this->created->format(Todo::TODO_DATE_FORMAT)}";
-            $todoString .= " {$this->text} +{$this->project} @{$this->context}";
-            $todoString .= " Due:{$this->due->format(Todo::TODO_DATE_FORMAT)}";
+            $todoString = "x {$this->completedDate->format(Todo::TODO_DATE_FORMAT)} ";
         } else {
-            $todoString = "({$this->priority}) {$this->created->format(Todo::TODO_DATE_FORMAT)}";
-            $todoString .= " {$this->text} +{$this->project} @{$this->context}";
-            $todoString .= " Due:{$this->due->format(Todo::TODO_DATE_FORMAT)}";
+            if($this->priority){
+                $todoString = "({$this->priority}) ";
+            } else {
+                $todoString = '';
+            }
         }
+        $todoString = $this->buildTodo($todoString);
+        return trim($todoString);
+    }
+
+    /**
+     * @param string $todoString
+     * @return string
+     */
+    private function buildTodo($todoString)
+    {
+        $todoString .= $this->buildCreated();
+        $todoString .= "{$this->text} ";
+        $todoString .= $this->buildProjects();
+        $todoString .= $this->buildContexts();
+        $todoString .= $this->buildDue();
         return $todoString;
+    }
+
+    private function buildCreated()
+    {
+        $created = null;
+        if($this->created){
+            $created = $this->created->format(Todo::TODO_DATE_FORMAT) . ' ';
+        }
+        return $created;
+    }
+
+    /**
+     * @return string
+     */
+    private function buildProjects()
+    {
+        if(count($this->projects) > 0){
+            return '+' . implode(' +', $this->projects) . ' ';
+        }
+    }
+
+    /**
+     * @return string
+     */
+    private function buildContexts()
+    {
+        if(count($this->contexts) > 0){
+            return '@' . implode(' @', $this->contexts) . ' ';
+        }
+    }
+
+    private function buildDue()
+    {
+        $due = null;
+        if($this->due){
+            $due = "Due:{$this->due->format(Todo::TODO_DATE_FORMAT)}";
+        }
+        return $due;
     }
 
     /**
@@ -170,19 +222,19 @@ class Todo
     }
 
     /**
-     * @return String
+     * @return String[]
      */
-    public function getProject()
+    public function getProjects()
     {
-        return $this->project;
+        return $this->projects;
     }
 
     /**
-     * @return Strimg
+     * @return String[]
      */
-    public function getContext()
+    public function getContexts()
     {
-        return $this->context;
+        return $this->contexts;
     }
 
     /**

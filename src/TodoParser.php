@@ -55,8 +55,8 @@ class TodoParser
                 self::getText($todoString),
                 self::getCreationDate($todoString),
                 null,
-                self::getProject($todoString),
-                self::getContext($todoString),
+                self::getProjects($todoString),
+                self::getContexts($todoString),
                 self::getDueDate($todoString),
                 true
             );
@@ -66,8 +66,8 @@ class TodoParser
                 self::getText($todoString),
                 self::getCreationDate($todoString),
                 self::getPriority($todoString),
-                self::getProject($todoString),
-                self::getContext($todoString),
+                self::getProjects($todoString),
+                self::getContexts($todoString),
                 self::getDueDate($todoString)
             );
         }
@@ -127,28 +127,28 @@ class TodoParser
      * @param $todoString
      * @return null|string
      */
-    private static function getProject($todoString)
+    private static function getProjects($todoString)
     {
-        $project = null;
+        $projects = [];
         $matches = [];
-        if(preg_match('/ \+\w+/m', $todoString, $matches)){
-            $project = trim($matches[0], ' +');
+        if(preg_match_all('/ \+(?P<projects>\w+)/m', $todoString, $matches)){
+            $projects = $matches['projects'];
         }
-        return $project;
+        return $projects;
     }
 
     /**
      * @param $todoString
      * @return null|string
      */
-    private static function getContext($todoString)
+    private static function getContexts($todoString)
     {
-        $context = null;
+        $contexts = [];
         $matches = [];
-        if(preg_match('/ \@\w+/m', $todoString, $matches)){
-            $context = trim($matches[0], ' @');
+        if(preg_match_all('/ \@(?P<contexts>\w+)/m', $todoString, $matches)){
+            $contexts = $matches['contexts'];
         }
-        return $context;
+        return $contexts;
     }
 
     /**

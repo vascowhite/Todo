@@ -33,13 +33,13 @@ use Vascowhite\Todo\TodoParser;
 
 class TodoTest extends \PHPUnit_Framework_TestCase
 {
-    private $testTodoText = '(A) 2015-04-26 This is a test todo +project @context Due:2015-04-26';
+    private $testTodoText = '(A) 2015-04-26 This is a test todo +projects @contexts Due:2015-04-26';
     private $testDoneTodoText;
 
     protected function setUp()
     {
         $this->testDoneTodoText =  'x ' . (new \DateTime())->format(Todo::TODO_DATE_FORMAT) .
-            " 2015-04-04 This is a test todo +project @context Due:2015-04-26";
+            " 2015-04-04 This is a test todo +projects @contexts Due:2015-04-26";
     }
 
     public function testCanInstantiate()
@@ -52,7 +52,13 @@ class TodoTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf(
             'Vascowhite\Todo\Todo',
-            Todo::createFromString('(A) 2015-04-26 This is a test todo +project @context Due:2015-04-26'),
+            Todo::createFromString('(A) 2015-04-26 This is a test todo +projects @contexts Due:2015-04-26'),
+            'Could not create from string'
+        );
+
+        $this->assertInstanceOf(
+            'Vascowhite\Todo\Todo',
+            Todo::createFromString('This is a test todo'),
             'Could not create from string'
         );
     }
@@ -62,13 +68,16 @@ class TodoTest extends \PHPUnit_Framework_TestCase
         $testTodo = TodoParser::parse($this->testTodoText);
         $this->assertEquals($this->testTodoText, $testTodo->__toString(), 'Could not convert to string');
 
-        $testTodo = TodoParser::parse('(A) 2015-04-26 This is a test todo +project @context Due:2015-04-26');
+        $testTodo = TodoParser::parse('(A) 2015-04-26 This is a test todo +projects @contexts Due:2015-04-26');
         $done = new \DateTime();
         $testTodo->done($done);
-        $doneString = 'x ' . $done->format(Todo::TODO_DATE_FORMAT) . ' 2015-04-26 This is a test todo +project @context Due:2015-04-26';
+        $doneString = 'x ' . $done->format(Todo::TODO_DATE_FORMAT) . ' 2015-04-26 This is a test todo +projects @contexts Due:2015-04-26';
         $this->assertEquals($doneString, $testTodo->__toString(), 'Could not convert to string after calling done()');
 
         $testTodo = TodoParser::parse($this->testDoneTodoText);
         $this->assertEquals($this->testDoneTodoText, $testTodo->__toString(), 'Could not convert to string when completed');
+
+        $testTodo = TodoParser::parse('test to do');
+        $this->assertEquals('test to do', $testTodo->__toString(), 'Could not convert to string on minimal todo');
     }
 }
