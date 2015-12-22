@@ -80,4 +80,13 @@ class TodoTest extends \PHPUnit_Framework_TestCase
         $testTodo = TodoParser::parse('test to do');
         $this->assertEquals('test to do', $testTodo->__toString(), 'Could not convert to string on minimal todo');
     }
+
+    public function testCanWriteCompleted()
+    {
+        $testTodo = TodoParser::parse('(A) This is a test todo +projects @contexts Due:2015-04-26');
+        $completed = 'x 2015-04-30 This is a test todo +projects @contexts Due:2015-04-26';
+        $testTodo->done(new \DateTime('2015-04-30'));
+
+        $this->assertEquals($completed, $testTodo);
+    }
 }
