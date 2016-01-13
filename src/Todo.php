@@ -279,4 +279,14 @@ class Todo
     {
         return $this->completedDate;
     }
+
+    /**
+     * Sets Todo as not completed.
+     * Priority of completed Todo's are lost.
+     */
+    public function undo()
+    {
+        $this->completed = false;
+        $this->completedDate = null;
+    }
 }

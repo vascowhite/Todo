@@ -89,4 +89,14 @@ class TodoTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($completed, $testTodo);
     }
+
+    public function testCanUndoCompletedTodo()
+    {
+        $completed = 'x 2015-04-30 This is a test todo +projects @contexts Due:2015-04-26';
+        $unCompleted = 'This is a test todo +projects @contexts Due:2015-04-26';
+
+        $testTodo = TodoParser::parse($completed);
+        $testTodo->undo();
+        $this->assertEquals($unCompleted, $testTodo, 'Could not undo completed Todo');
+    }
 }
