@@ -289,4 +289,13 @@ class Todo
         $this->completed = false;
         $this->completedDate = null;
     }
+
+    /**
+     * @param Todo $comparedWith
+     * @return bool
+     */
+    public function sameAs(Todo $comparedWith)
+    {
+        return $this->__toString() === $comparedWith->__toString();
+    }
 }

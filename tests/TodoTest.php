@@ -99,4 +99,14 @@ class TodoTest extends \PHPUnit_Framework_TestCase
         $testTodo->undo();
         $this->assertEquals($unCompleted, $testTodo, 'Could not undo completed Todo');
     }
+
+    public function testSameAs()
+    {
+        $todo1 = TodoParser::parse('This is a test todo +projects @contexts Due:2015-04-26');
+        $todo2 = TodoParser::parse('This is a test todo +projects @contexts Due:2015-04-26');
+        $todo3 = TodoParser::parse('This is a different test todo +projects @contexts Due:2015-04-26');
+
+        $this->assertTrue($todo1->sameAs($todo2), 'Failed to compare similar Todos');
+        $this->assertFalse($todo2->sameAs($todo3), 'Failed to detect different Todos');
+    }
 }
