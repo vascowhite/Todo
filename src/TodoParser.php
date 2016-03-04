@@ -46,7 +46,7 @@ class TodoParser
     public static function parse($todoString)
     {
         $completed = false;
-        if('x' === substr($todoString, 0, 1)){
+        if('x ' === substr($todoString, 0, 2)){
             $completed = true;
         }
 

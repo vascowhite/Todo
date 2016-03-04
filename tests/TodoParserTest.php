@@ -121,6 +121,13 @@ class TodoParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('2015-04-26', $testTodo->getCompletedDate()->format(Todo::TODO_DATE_FORMAT));
     }
 
+    public function testCanParseTodoBeginningWithXAsIncomplete()
+    {
+        $testTodoText = 'x-ray to test starting with x';
+        $testTodo = TodoParser::parse($testTodoText);
+        $this->assertFalse($testTodo->getCompleted(), 'Falsely marked as complete');
+    }
+
     public function testCanParseMultiples()
     {
         $testTodo = TodoParser::parse($this->testMultiples);
