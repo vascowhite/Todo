@@ -90,10 +90,26 @@ class TodoParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('project', $testTodo->getProjects()[0], 'Could not parse projects');
     }
 
+    public function testCanParseProjectsWithHyphen()
+    {
+        $testTodoText = "(A) A test with +hyphenated-project +hyphenated-project2";
+        $testTodo = TodoParser::parse($testTodoText);
+        $this->assertEquals('hyphenated-project', $testTodo->getProjects()[0], 'Could not parse hyphenated projects');
+        $this->assertEquals('hyphenated-project2', $testTodo->getProjects()[1], 'Could not parse hyphenated projects');
+    }
+
     public function testCanParseContexts()
     {
         $testTodo = TodoParser::parse($this->testTodoText);
         $this->assertEquals('context', $testTodo->getContexts()[0], 'Could not parse contexts');
+    }
+
+    public function testCanParseContextsWithHyphen()
+    {
+        $testTodoText = "(A) A test with @hyphenated-context @hyphenated-context2";
+        $testTodo = TodoParser::parse($testTodoText);
+        $this->assertEquals('hyphenated-context', $testTodo->getContexts()[0], 'Could not parse hyphenated contexts');
+        $this->assertEquals('hyphenated-context2', $testTodo->getContexts()[1], 'Could not parse hyphenated contexts');
     }
 
     public function testCanParseDueDate()
