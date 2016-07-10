@@ -98,6 +98,14 @@ class TodoParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('hyphenated-project2', $testTodo->getProjects()[1], 'Could not parse hyphenated projects');
     }
 
+    public function testCanParseProjectsWithUnderscore()
+    {
+        $testTodoText = "(A) A test with +underscore_project +underscore_project2";
+        $testTodo = TodoParser::parse($testTodoText);
+        $this->assertEquals('underscore_project', $testTodo->getProjects()[0], 'Could not parse underscore projects');
+        $this->assertEquals('underscore_project2', $testTodo->getProjects()[1], 'Could not parse underscore projects');
+    }
+
     public function testCanParseContexts()
     {
         $testTodo = TodoParser::parse($this->testTodoText);
@@ -110,6 +118,14 @@ class TodoParserTest extends \PHPUnit_Framework_TestCase
         $testTodo = TodoParser::parse($testTodoText);
         $this->assertEquals('hyphenated-context', $testTodo->getContexts()[0], 'Could not parse hyphenated contexts');
         $this->assertEquals('hyphenated-context2', $testTodo->getContexts()[1], 'Could not parse hyphenated contexts');
+    }
+
+    public function testCanParseContextsWithUnderscore()
+    {
+        $testTodoText = "(A) A test with @underscore_context @underscore_context2";
+        $testTodo = TodoParser::parse($testTodoText);
+        $this->assertEquals('underscore_context', $testTodo->getContexts()[0], 'Could not parse underscore contexts');
+        $this->assertEquals('underscore_context2', $testTodo->getContexts()[1], 'Could not parse underscore_ contexts');
     }
 
     public function testCanParseDueDate()
