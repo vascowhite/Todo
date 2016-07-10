@@ -132,7 +132,7 @@ class TodoParser
     {
         $projects = [];
         $matches = [];
-        if(preg_match_all('/ \+(?P<projects>[a-zA-Z0-9-]+)/m', $todoString, $matches)){
+        if(preg_match_all('/ \+(?P<projects>[a-zA-Z0-9-_]+)/m', $todoString, $matches)){
             $projects = $matches['projects'];
         }
         return $projects;
@@ -146,7 +146,7 @@ class TodoParser
     {
         $contexts = [];
         $matches = [];
-        if(preg_match_all('/ \@(?P<contexts>[a-zA-Z0-9-]+)/m', $todoString, $matches)){
+        if(preg_match_all('/ \@(?P<contexts>[a-zA-Z0-9-_]+)/m', $todoString, $matches)){
             $contexts = $matches['contexts'];
         }
         return $contexts;
