@@ -63,6 +63,18 @@ class TodoTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testCanInstantiateFromStringWithHyphensAndUnderscores()
+    {
+        $testTodo = Todo::createFromString('(A) 2015-04-26 This is a test todo +projects_underscore @contexts-hypenated Due:2015-04-26');
+        $this->assertInstanceOf(
+            'Vascowhite\Todo\Todo',
+            $testTodo,
+            'Could not create from string'
+        );
+
+        $this->assertEquals('This is a test todo', $testTodo->getText(), 'Could not parse with hyphens/underscores');
+    }
+
     public function testCanConvertToString()
     {
         $testTodo = TodoParser::parse($this->testTodoText);

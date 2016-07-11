@@ -80,8 +80,8 @@ class TodoParser
             [
                 '/\Ax \d{4}-\d{2}-\d{2} /m', //Completion date & 'x' if completed
                 '/\A\([A-Z]\) /m',          //Priority
-                '/ \+[a-zA-Z0-9-]+/m',      //Project
-                '/ \@[a-zA-Z0-9-]+/m',      //Context
+                '/ \+[a-zA-Z0-9-_]+/m',      //Project
+                '/ \@[a-zA-Z0-9-_]+/m',      //Context
                 '/Due:\d{4}-\d{2}-\d{2}/m', //Due date 'D'
                 '/due:\d{4}-\d{2}-\d{2}/m', //Due date 'd'
                 '/\A\d{4}-\d{2}-\d{2} /m',  //Date - we do this last so we can anchor it to the start of the string.
