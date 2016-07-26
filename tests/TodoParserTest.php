@@ -145,6 +145,13 @@ class TodoParserTest extends \PHPUnit_Framework_TestCase
         if($testTodo->getDue()){
             $this->assertEquals('2015-04-26', $testTodo->getDue()->format(Todo::TODO_DATE_FORMAT), 'Could not parse due date with lc D');
         }
+
+        $testTodoText = '(A) This is a test todo due:2015-4-6 +project @context';
+        $testTodo = TodoParser::parse($testTodoText);
+        $this->assertNotNull($testTodo->getDue(), 'Could not parse due date with single digit month and date');
+        if($testTodo->getDue()){
+            $this->assertEquals('2015-04-06', $testTodo->getDue()->format(Todo::TODO_DATE_FORMAT), '\'Could not parse due date with single digit month and date');
+        }
     }
 
     public function testCanParseCompleted()
