@@ -82,7 +82,7 @@ class TodoParser
                 '/\A\([A-Z]\) /m',          //Priority
                 '/ \+[a-zA-Z0-9-_]+/m',      //Project
                 '/ \@[a-zA-Z0-9-_]+/m',      //Context
-                '/[Dd]ue[: ][\d]{4}[- ][\d]{1,2}[- ][\d]{1,2}/m', //Due date 'D or d'
+                '/[Dd]ue[: ][\d]{4}-[\d]{1,2}-[\d]{1,2}/m', //Due date 'D or d'
                 '/\A\d{4}-\d{2}-\d{2} /m',  //Date - we do this last so we can anchor it to the start of the string.
             ],
             null,
@@ -159,7 +159,7 @@ class TodoParser
     {
         $dueDate = null;
         $matches = [];
-        if(preg_match('/[Dd]ue[: ][\d]{4}[- ][\d]{1,2}[- ][\d]{1,2}/', $todoString, $matches)){
+        if(preg_match('/[Dd]ue[: ][\d]{4}-[\d]{1,2}-[\d]{1,2}/', $todoString, $matches)){
             $dueDate = \DateTime::createFromFormat(Todo::TODO_DATE_FORMAT, substr($matches[0], 4, 10));
         }
         return $dueDate;
