@@ -150,7 +150,7 @@ class TodoParserTest extends \PHPUnit_Framework_TestCase
         $testTodo = TodoParser::parse($testTodoText);
         $this->assertNotNull($testTodo->getDue(), 'Could not parse due date with single digit month and date');
         if($testTodo->getDue()){
-            $this->assertEquals('2015-04-06', $testTodo->getDue()->format(Todo::TODO_DATE_FORMAT), '\'Could not parse due date with single digit month and date');
+            $this->assertEquals('2015-04-06', $testTodo->getDue()->format(Todo::TODO_DATE_FORMAT), 'Could not parse due date with single digit month and date');
         }
     }
 
@@ -184,5 +184,44 @@ class TodoParserTest extends \PHPUnit_Framework_TestCase
     {
         $testTodo = TodoParser::parse($this->testMultiples);
         $this->assertEquals($this->testMultiples, $testTodo->__toString(), 'Could not parse multiple projects/contexts');
+    }
+
+    public function testCanParseDateShortCuts()
+    {
+        //Test day names
+        $dayNames = [
+            'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday',
+        ];
+
+        foreach($dayNames as $day){
+            $testTodoText = "(A) This is a test todo due:$day +project @context";
+            $testTodo = TodoParser::parse($testTodoText);
+            $this->assertNotNull($testTodo->getDue(), 'Could not parse due date with day name: ' . $day);
+            if($testTodo->getDue()){
+                $this->assertEquals(
+                    (new \DateTime($day))->format(Todo::TODO_DATE_FORMAT),
+                    $testTodo->getDue()->format(Todo::TODO_DATE_FORMAT),
+                    'Could not parse due date with full day name'
+                );
+            }
+        }
+
+        //Test relative date strings
+        $dayStrings = [
+            'today', 'tomorrow', 'yesterday', 'next monday', 'next week',
+        ];
+
+        foreach($dayStrings as $day){
+            $testTodoText = "(A) This is a test todo due:$day +project @context";
+            $testTodo = TodoParser::parse($testTodoText);
+            $this->assertNotNull($testTodo->getDue(), 'Could not parse due date with day string: ' . $day);
+            if($testTodo->getDue()){
+                $this->assertEquals(
+                    (new \DateTime($day))->format(Todo::TODO_DATE_FORMAT),
+                    $testTodo->getDue()->format(Todo::TODO_DATE_FORMAT),
+                    'Could not parse due date with full day name'
+                );
+            }
+        }
     }
 }
