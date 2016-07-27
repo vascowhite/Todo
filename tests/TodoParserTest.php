@@ -204,6 +204,17 @@ class TodoParserTest extends \PHPUnit_Framework_TestCase
                     'Could not parse due date with full day name'
                 );
             }
+
+            $testTodoText = "(A) This is a test todo due:$day";
+            $testTodo = TodoParser::parse($testTodoText);
+            $this->assertNotNull($testTodo->getDue(), 'Could not parse due date with day name: ' . $day . ' at end of line');
+            if($testTodo->getDue()){
+                $this->assertEquals(
+                    (new \DateTime($day))->format(Todo::TODO_DATE_FORMAT),
+                    $testTodo->getDue()->format(Todo::TODO_DATE_FORMAT),
+                    'Could not parse due date with full day name'
+                );
+            }
         }
 
         //Test relative date strings
@@ -215,6 +226,17 @@ class TodoParserTest extends \PHPUnit_Framework_TestCase
             $testTodoText = "(A) This is a test todo due:$day +project @context";
             $testTodo = TodoParser::parse($testTodoText);
             $this->assertNotNull($testTodo->getDue(), 'Could not parse due date with day string: ' . $day);
+            if($testTodo->getDue()){
+                $this->assertEquals(
+                    (new \DateTime($day))->format(Todo::TODO_DATE_FORMAT),
+                    $testTodo->getDue()->format(Todo::TODO_DATE_FORMAT),
+                    'Could not parse due date with full day name'
+                );
+            }
+
+            $testTodoText = "(A) This is a test todo due:$day +project @context";
+            $testTodo = TodoParser::parse($testTodoText);
+            $this->assertNotNull($testTodo->getDue(), 'Could not parse due date with day string: ' . $day . ' at end of line');
             if($testTodo->getDue()){
                 $this->assertEquals(
                     (new \DateTime($day))->format(Todo::TODO_DATE_FORMAT),
