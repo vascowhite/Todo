@@ -200,7 +200,7 @@ class Todo
     {
         $due = null;
         if($this->due){
-            $due = "Due:{$this->due->format(Todo::TODO_DATE_FORMAT)}";
+            $due = "due:{$this->due->format(Todo::TODO_DATE_FORMAT)}";
         }
         return $due;
     }

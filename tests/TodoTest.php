@@ -33,13 +33,13 @@ use Vascowhite\Todo\TodoParser;
 
 class TodoTest extends \PHPUnit_Framework_TestCase
 {
-    private $testTodoText = '(A) 2015-04-26 This is a test todo +projects @contexts Due:2015-04-26';
+    private $testTodoText = '(A) 2015-04-26 This is a test todo +projects @contexts due:2015-04-26';
     private $testDoneTodoText;
 
     protected function setUp()
     {
         $this->testDoneTodoText =  'x ' . (new \DateTime())->format(Todo::TODO_DATE_FORMAT) .
-            " 2015-04-04 This is a test todo +projects @contexts Due:2015-04-26";
+            " 2015-04-04 This is a test todo +projects @contexts due:2015-04-26";
     }
 
     public function testCanInstantiate()
@@ -52,7 +52,7 @@ class TodoTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf(
             'Vascowhite\Todo\Todo',
-            Todo::createFromString('(A) 2015-04-26 This is a test todo +projects @contexts Due:2015-04-26'),
+            Todo::createFromString('(A) 2015-04-26 This is a test todo +projects @contexts due:2015-04-26'),
             'Could not create from string'
         );
 
@@ -80,10 +80,10 @@ class TodoTest extends \PHPUnit_Framework_TestCase
         $testTodo = TodoParser::parse($this->testTodoText);
         $this->assertEquals($this->testTodoText, $testTodo->__toString(), 'Could not convert to string');
 
-        $testTodo = TodoParser::parse('(A) 2015-04-26 This is a test todo +projects @contexts Due:2015-04-26');
+        $testTodo = TodoParser::parse('(A) 2015-04-26 This is a test todo +projects @contexts due:2015-04-26');
         $done = new \DateTime();
         $testTodo->done($done);
-        $doneString = 'x ' . $done->format(Todo::TODO_DATE_FORMAT) . ' 2015-04-26 This is a test todo +projects @contexts Due:2015-04-26';
+        $doneString = 'x ' . $done->format(Todo::TODO_DATE_FORMAT) . ' 2015-04-26 This is a test todo +projects @contexts due:2015-04-26';
         $this->assertEquals($doneString, $testTodo->__toString(), 'Could not convert to string after calling done()');
 
         $testTodo = TodoParser::parse($this->testDoneTodoText);
@@ -95,8 +95,8 @@ class TodoTest extends \PHPUnit_Framework_TestCase
 
     public function testCanWriteCompleted()
     {
-        $testTodo = TodoParser::parse('(A) This is a test todo +projects @contexts Due:2015-04-26');
-        $completed = 'x 2015-04-30 This is a test todo +projects @contexts Due:2015-04-26';
+        $testTodo = TodoParser::parse('(A) This is a test todo +projects @contexts due:2015-04-26');
+        $completed = 'x 2015-04-30 This is a test todo +projects @contexts due:2015-04-26';
         $testTodo->done(new \DateTime('2015-04-30'));
 
         $this->assertEquals($completed, $testTodo);
@@ -104,8 +104,8 @@ class TodoTest extends \PHPUnit_Framework_TestCase
 
     public function testCanUndoCompletedTodo()
     {
-        $completed = 'x 2015-04-30 This is a test todo +projects @contexts Due:2015-04-26';
-        $unCompleted = 'This is a test todo +projects @contexts Due:2015-04-26';
+        $completed = 'x 2015-04-30 This is a test todo +projects @contexts due:2015-04-26';
+        $unCompleted = 'This is a test todo +projects @contexts due:2015-04-26';
 
         $testTodo = TodoParser::parse($completed);
         $testTodo->undo();
@@ -114,8 +114,8 @@ class TodoTest extends \PHPUnit_Framework_TestCase
 
     public function testSameAs()
     {
-        $todo1 = TodoParser::parse('This is a test todo +projects @contexts Due:2015-04-26');
-        $todo2 = TodoParser::parse('This is a test todo +projects @contexts Due:2015-04-26');
+        $todo1 = TodoParser::parse('This is a test todo +projects @contexts due:2015-04-26');
+        $todo2 = TodoParser::parse('This is a test todo +projects @contexts due:2015-04-26');
         $todo3 = TodoParser::parse('This is a different test todo +projects @contexts Due:2015-04-26');
 
         $this->assertTrue($todo1->sameAs($todo2), 'Failed to compare similar Todos');

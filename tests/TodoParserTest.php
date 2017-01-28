@@ -36,7 +36,7 @@ use Vascowhite\Todo\TodoParser;
 
 class TodoParserTest extends \PHPUnit_Framework_TestCase
 {
-    private $testTodoText = '(A) 2015-04-26 This is a test todo +project @context Due:2015-04-26';
+    private $testTodoText = '(A) 2015-04-26 This is a test todo +project @context due:2015-04-26';
     private $testMultiples = 'tests to do +project1 +project2 +project3 @context1 @context2 @context3';
 
     public function testCanParse()
@@ -51,7 +51,7 @@ class TodoParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanParseText()
     {
-        $testTodoText = '(A) 2015-04-26 This is a test todo with a random date in it 2015-04-04 +project @context Due:2015-04-26';
+        $testTodoText = '(A) 2015-04-26 This is a test todo with a random date in it 2015-04-04 +project @context due:2015-04-26';
         $testTodo = TodoParser::parse($testTodoText);
         $this->assertEquals('This is a test todo with a random date in it 2015-04-04', $testTodo->getText(), 'Could not get text');
     }
@@ -61,7 +61,7 @@ class TodoParserTest extends \PHPUnit_Framework_TestCase
         $testTodo = TodoParser::parse($this->testTodoText);
         $this->assertEquals('2015-04-26', $testTodo->getCreated()->format(Todo::TODO_DATE_FORMAT), 'Could not get date created.');
 
-        $testTodoText = '(A) This is a test todo with a random date in it 2015-04-04 +project @context Due:2015-04-26';
+        $testTodoText = '(A) This is a test todo with a random date in it 2015-04-04 +project @context due:2015-04-26';
         $testTodo = TodoParser::parse($testTodoText);
         $this->assertNull($testTodo->getCreated(), 'Mistakenly got date created.');
     }
@@ -71,15 +71,15 @@ class TodoParserTest extends \PHPUnit_Framework_TestCase
         $testTodo = TodoParser::parse($this->testTodoText);
         $this->assertEquals('A', $testTodo->getPriority(), 'Could not get priority');
 
-        $testTodoText = '(A)-> This is a test todo +project @context Due:2015-04-26';
+        $testTodoText = '(A)-> This is a test todo +project @context due:2015-04-26';
         $testTodo = TodoParser::parse($testTodoText);
         $this->assertNull($testTodo->getPriority(), "Parsed invalid priority");
 
-        $testTodoText = '(a) This is a test todo +project @context Due:2015-04-26';
+        $testTodoText = '(a) This is a test todo +project @context due:2015-04-26';
         $testTodo = TodoParser::parse($testTodoText);
         $this->assertNull($testTodo->getPriority(), "Parsed invalid priority");
 
-        $testTodoText = 'This (A) is a test todo +project @context Due:2015-04-26';
+        $testTodoText = 'This (A) is a test todo +project @context due:2015-04-26';
         $testTodo = TodoParser::parse($testTodoText);
         $this->assertNull($testTodo->getPriority(), "Parsed invalid priority");
     }
@@ -135,7 +135,7 @@ class TodoParserTest extends \PHPUnit_Framework_TestCase
         $testTodo = TodoParser::parse($this->testTodoText);
         $this->assertEquals('2015-04-26', $testTodo->getDue()->format(Todo::TODO_DATE_FORMAT), 'Could not parse due date');
 
-        $testTodoText = '(A) This is a test todo Due:2015-04-26 +project @context';
+        $testTodoText = '(A) This is a test todo due:2015-04-26 +project @context';
         $testTodo = TodoParser::parse($testTodoText);
         $this->assertEquals('2015-04-26', $testTodo->getDue()->format(Todo::TODO_DATE_FORMAT), 'Could not parse due date in middle of string');
 
@@ -159,7 +159,7 @@ class TodoParserTest extends \PHPUnit_Framework_TestCase
         $testTodo = TodoParser::parse($this->testTodoText);
         $this->assertFalse($testTodo->getCompleted(), 'Mistakenly parsed completed');
 
-        $testTodoText = 'x 2015-04-26 This is a test todo +project @context Due:2015-04-26';
+        $testTodoText = 'x 2015-04-26 This is a test todo +project @context due:2015-04-26';
         $testTodo = TodoParser::parse($testTodoText);
         $this->assertTrue($testTodo->getCompleted(), 'Could not parse completed');
         $this->assertNull($testTodo->getPriority(), 'Priority not nulled when marked as done');
@@ -168,7 +168,7 @@ class TodoParserTest extends \PHPUnit_Framework_TestCase
 
     public function testCanParseCompletedDate()
     {
-        $testTodoText = 'x 2015-04-26 This is a test todo +projects @contexts Due:2015-04-26';
+        $testTodoText = 'x 2015-04-26 This is a test todo +projects @contexts due:2015-04-26';
         $testTodo = TodoParser::parse($testTodoText);
         $this->assertEquals('2015-04-26', $testTodo->getCompletedDate()->format(Todo::TODO_DATE_FORMAT));
     }
@@ -237,7 +237,7 @@ class TodoParserTest extends \PHPUnit_Framework_TestCase
             $testTodoText = "(A) This is a test todo due:$day +project @context";
             $testTodo = TodoParser::parse($testTodoText);
             $this->assertNotNull($testTodo->getDue(), 'Could not parse due date with day string: ' . $day . ' at end of line');
-            if($testTodo->getDue()){
+            if($testTodo->getdue()){
                 $this->assertEquals(
                     (new \DateTime($day))->format(Todo::TODO_DATE_FORMAT),
                     $testTodo->getDue()->format(Todo::TODO_DATE_FORMAT),
